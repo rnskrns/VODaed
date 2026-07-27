@@ -542,9 +542,6 @@
         <div class="list-row" style="${isPlaying ? 'border-left:2px solid var(--accent);background:var(--surface-2);' : ''}">
           <div class="list-main">
             <div class="list-rank">${i+1}</div>
-            <div class="thumb" data-titleno="${vod.titleNo}">
-              ${vod.thumb ? `<img src="${vod.thumb}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='<span style=\\'display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--text-dim);font-size:16px;\\'>🎬</span>'">` : `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--text-dim);font-size:16px;">🎬</span>`}
-            </div>
             <div class="list-title">${streamerTag}<a href="${vod.vodUrl}" target="_blank" rel="noopener">${safeTitle}</a></div>
           </div>
           <div class="list-meta">
