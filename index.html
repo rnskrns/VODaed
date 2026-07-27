@@ -169,6 +169,18 @@
   .results-head{display:flex;align-items:center;justify-content:space-between;margin:26px 0 12px;}
   .results-head h2{font-family:'Space Grotesk',sans-serif;font-size:14px;margin:0;color:var(--text);}
   .results-count{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);background:var(--accent-dim);padding:3px 9px;border-radius:999px;}
+  .results-head-left{display:flex;align-items:center;gap:10px;}
+  .refresh-timer{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);white-space:nowrap;}
+  .refresh-btn{
+    display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;
+    background:transparent;border:1px solid var(--border);color:var(--text-muted);
+    transition:background .15s,color .15s,border-color .15s;padding:0;flex-shrink:0;
+  }
+  .refresh-btn svg{width:13px;height:13px;transition:transform .5s ease;}
+  .refresh-btn:hover:not(:disabled){background:var(--surface-2);color:var(--text);border-color:var(--text-dim);}
+  .refresh-btn:disabled{opacity:.35;cursor:default;}
+  .refresh-btn.spinning svg{animation:refresh-spin .7s linear infinite;}
+  @keyframes refresh-spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
   .swk-select{
     background:var(--surface-2);border:1px solid var(--border);border-radius:7px;color:var(--text);
     padding:6px 10px;font-size:12.5px;font-family:'Noto Sans KR',sans-serif;outline:none;cursor:pointer;
@@ -288,7 +300,16 @@
   </div>
 
   <div class="results-head">
-    <h2>리스트</h2>
+    <div class="results-head-left">
+      <h2>리스트</h2>
+      <span class="refresh-timer" id="refreshTimer"></span>
+      <button class="refresh-btn" id="refreshBtn" type="button" title="조회수 새로고침" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
+          <polyline points="21 3 21 9 15 9"/>
+        </svg>
+      </button>
+    </div>
     <div style="display:flex;align-items:center;gap:10px;">
       <select id="streamerFilterSelect" class="swk-select" hidden>
         <option value="all">전체</option>
@@ -366,6 +387,8 @@
   const statusText = $('#statusText');
   const resultsEl = $('#results');
   const resultsCount = $('#resultsCount');
+  const refreshTimerEl = $('#refreshTimer');
+  const refreshBtnEl = $('#refreshBtn');
   const streamerFilterSelect = $('#streamerFilterSelect');
   let store = [];   // normalized vod list with info attached
   let busy = false;
@@ -640,6 +663,82 @@
     return s ? (s.nickname || s.id) : userId;
   }
 
+  // ---- 조회수 5분 자동 갱신 ----
+  const VIEWCOUNT_REFRESH_MS = 5 * 60 * 1000;
+  let viewCountRefreshTimer = null;
+  let countdownDisplayTimer = null;
+  let nextRefreshAt = null;
+
+  function updateRefreshCountdown(){
+    if(!nextRefreshAt){ refreshTimerEl.textContent = ''; return; }
+    const msLeft = nextRefreshAt - Date.now();
+    if(msLeft <= 0){ refreshTimerEl.textContent = '갱신 중…'; return; }
+    const totalSec = Math.ceil(msLeft/1000);
+    const mm = String(Math.floor(totalSec/60)).padStart(2,'0');
+    const ss = String(totalSec%60).padStart(2,'0');
+    refreshTimerEl.textContent = `다음 갱신까지 ${mm}:${ss}`;
+  }
+
+  function startViewCountRefreshTimer(){
+    if(viewCountRefreshTimer) clearInterval(viewCountRefreshTimer);
+    viewCountRefreshTimer = setInterval(refreshViewCounts, VIEWCOUNT_REFRESH_MS);
+    nextRefreshAt = Date.now() + VIEWCOUNT_REFRESH_MS;
+    if(countdownDisplayTimer) clearInterval(countdownDisplayTimer);
+    countdownDisplayTimer = setInterval(updateRefreshCountdown, 1000);
+    refreshBtnEl.disabled = false;
+    updateRefreshCountdown();
+  }
+
+  function stopViewCountRefreshTimer(){
+    if(viewCountRefreshTimer){ clearInterval(viewCountRefreshTimer); viewCountRefreshTimer = null; }
+    if(countdownDisplayTimer){ clearInterval(countdownDisplayTimer); countdownDisplayTimer = null; }
+    nextRefreshAt = null;
+    refreshTimerEl.textContent = '';
+    refreshBtnEl.disabled = true;
+  }
+
+  async function refreshViewCounts(){
+    // 전체 재조회가 진행 중이거나 목록이 비어있으면 건너뜀
+    if(busy || streamers.length === 0 || store.length === 0) return;
+    refreshBtnEl.disabled = true;
+    refreshBtnEl.classList.add('spinning');
+    try{
+      const results = await Promise.allSettled(streamers.map(s => fetchAllVods(s.id)));
+      const freshByTitleNo = new Map();
+      results.forEach(r => {
+        if(r.status === 'fulfilled'){
+          r.value.forEach(item => freshByTitleNo.set(item.titleNo, item));
+        }
+      });
+      // 기존 목록의 조회수만 최신 값으로 갱신 (영구보관/삭제예정 정보는 유지)
+      store.forEach(vod => {
+        const fresh = freshByTitleNo.get(vod.titleNo);
+        if(fresh){
+          vod.count = fresh.count;
+          vod.basicCount = fresh.basicCount;
+        }
+      });
+      render();
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mm = String(now.getMinutes()).padStart(2,'0');
+      const ss = String(now.getSeconds()).padStart(2,'0');
+      setStatus(`완료 — 총 <b>${store.length}</b>건 수집 · 조회수 자동 갱신 ${hh}:${mm}:${ss}`);
+    }catch(e){
+      console.debug('[조회수 자동 갱신] 실패:', e);
+    }finally{
+      refreshBtnEl.classList.remove('spinning');
+      refreshBtnEl.disabled = store.length === 0;
+    }
+  }
+
+  refreshBtnEl.addEventListener('click', async () => {
+    if(refreshBtnEl.disabled || busy) return;
+    await refreshViewCounts();
+    // 수동 새로고침 후에는 자동 갱신 주기를 지금 시점부터 다시 5분으로 리셋
+    if(store.length > 0) startViewCountRefreshTimer();
+  });
+
   async function runFetch(){
     if(busy) return;
     if(streamers.length === 0){ streamerInput.focus(); return; }
@@ -647,6 +746,7 @@
     busy = true;
     fetchBtn.disabled = true;
     setMeter(true);
+    stopViewCountRefreshTimer();
     resultsEl.innerHTML = '';
     store = [];
     render();
@@ -672,6 +772,7 @@
       });
 
       setStatus(`완료 — 총 <b>${items.length}</b>건 수집${failed.length ? ` (실패: ${failed.join(', ')})` : ''}`);
+      startViewCountRefreshTimer();
     }catch(err){
       const isCors = err instanceof TypeError;
       resultsEl.innerHTML = `
