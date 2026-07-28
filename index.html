@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VOD 심폐소생기 — SOOP 순수 조회수 필터</title>
+<title>Signal VOD — SOOP 순수 조회수 필터</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -67,52 +68,53 @@
   header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
   .brand{display:flex;align-items:center;gap:12px;}
   .brand-mark{
-    width:38px;height:38px;border-radius:9px;flex-shrink:0;
+    width:56px;height:56px;border-radius:9px;flex-shrink:0;
     background:linear-gradient(135deg, var(--accent), #7bd0ff);
     display:flex;align-items:center;justify-content:center;
     box-shadow:0 0 24px rgba(58,160,255,0.35);
   }
-  .brand-mark svg{width:20px;height:20px;}
+  .brand-mark svg{width:24px;height:24px;}
   .brand h1{
     font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin:0;letter-spacing:-0.01em;
   }
   .brand p{margin:2px 0 0;font-size:12.5px;color:var(--text-muted);}
-  .live-chip{
-    display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;
-    font-size:11px;color:var(--text-muted);padding:6px 10px;border:1px solid var(--border);border-radius:999px;
-    background:var(--surface);
-  }
-  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn);animation:pulse 1.6s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  
+  .header-actions { display:flex; align-items:center; gap: 8px; }
 
-  .theme-toggle{
-    display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);
+  .theme-toggle, .btn-ghost{
+    display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--text-muted);
     padding:7px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);
-    transition:background .15s,color .15s,border-color .15s;
+    transition:background .15s,color .15s,border-color .15s; cursor: pointer; font-family: inherit;
   }
-  .theme-toggle:hover{background:var(--surface-2);color:var(--text);}
+  .theme-toggle:hover, .btn-ghost:hover{background:var(--surface-2);color:var(--text);}
   .theme-toggle svg{width:14px;height:14px;flex-shrink:0;}
 
-  /* ---- CORS notice ---- */
-  .streamer-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  /* ---- Streamer Tags ---- */
+  .streamer-list{display:flex;flex-wrap:wrap;gap:8px;}
   .streamer-list:empty{margin-top:0;}
   .streamer-tag{
     display:flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);
-    border-radius:999px;padding:4px 8px 4px 4px;
+    border-radius:999px;padding:4px 4px 4px 4px;cursor:pointer;transition:background .15s,border-color .15s,transform .1s;
+    -webkit-tap-highlight-color:transparent;
   }
+  .streamer-tag:hover{background:var(--surface);border-color:var(--text-dim);}
+  .streamer-tag:active{transform:scale(.97);}
+  
   .streamer-tag-avatar{
-    width:24px;height:24px;border-radius:50%;flex-shrink:0;overflow:hidden;background:var(--accent-dim);
+    width:24px;height:24px;border-radius:50%;flex-shrink:0;overflow:hidden;background:var(--surface);
     display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;
-    font-weight:700;font-size:11px;color:var(--accent);
+    font-weight:700;font-size:11px;
   }
   .streamer-tag-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-  .streamer-tag-nick{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;}
+  .streamer-tag-nick{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap; padding-right:4px;}
   .streamer-tag-id{font-size:10.5px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
-  .streamer-tag-x{
-    background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12px;line-height:1;
-    padding:2px 3px;border-radius:50%;margin-left:2px;
+  
+  .remove-streamer {
+    background: transparent; border: none; color: var(--text-muted); cursor: pointer;
+    font-size: 16px; padding: 0 8px; border-radius: 50%; line-height: 1; display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, background 0.15s; height: 24px;
   }
-  .streamer-tag-x:hover{color:var(--warn);background:rgba(251,107,107,0.12);}
+  .remove-streamer:hover { color: var(--warn); background: var(--warn-dim); }
 
   /* ---- Control panel ---- */
   .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
@@ -120,13 +122,13 @@
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
   .field{display:flex;flex-direction:column;gap:6px;}
   .field label{font-size:11.5px;color:var(--text-muted);}
+  
   input[type="text"], input[type="number"]{
     background:var(--surface-2);border:1px solid var(--border);border-radius:7px;color:var(--text);
     padding:9px 11px;font-size:13.5px;font-family:'JetBrains Mono',monospace;outline:none;
     transition:border-color .15s;
   }
   input:focus{border-color:var(--accent);}
-  #streamerId{width:180px;}
   .num-input{width:88px;}
   .tilde{color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
   .checkline{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-muted);cursor:pointer;user-select:none;}
@@ -135,18 +137,11 @@
   button{font-family:'Noto Sans KR',sans-serif;cursor:pointer;border:none;}
   .btn-primary{
     background:var(--accent);color:#04121f;font-weight:700;font-size:13.5px;
-    padding:10px 18px;border-radius:7px;transition:filter .15s, transform .1s;margin-left:auto;
+    padding:10px 18px;border-radius:7px;transition:filter .15s, transform .1s;margin-left:auto; display:flex; align-items:center; justify-content:center; gap: 6px;
   }
   .btn-primary:hover{filter:brightness(1.08);}
   .btn-primary:active{transform:scale(.97);}
   .btn-primary:disabled{opacity:.4;cursor:default;filter:none;}
-  .btn-ghost{
-    background:transparent;border:1px solid var(--border);color:var(--text-muted);
-    font-size:12.5px;padding:8px 13px;border-radius:7px;transition:background .15s,color .15s;
-  }
-  .btn-ghost:hover{background:var(--surface-2);color:var(--text);}
-
-  .divider{height:1px;background:var(--border);margin:16px 0;}
 
   /* ---- Signal / progress meter ---- */
   .meter-row{display:flex;align-items:center;gap:14px;}
@@ -181,11 +176,6 @@
   .refresh-btn:disabled{opacity:.35;cursor:default;}
   .refresh-btn.spinning svg{animation:refresh-spin .7s linear infinite;}
   @keyframes refresh-spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-  .swk-select{
-    background:var(--surface-2);border:1px solid var(--border);border-radius:7px;color:var(--text);
-    padding:6px 10px;font-size:12.5px;font-family:'Noto Sans KR',sans-serif;outline:none;cursor:pointer;
-  }
-  .swk-select:focus{border-color:var(--accent);}
 
   .list{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);}
   .list-row{
@@ -216,8 +206,6 @@
   .error-box{border-color:var(--warn-dim);color:var(--warn);border-style:solid;}
   .error-box b{display:block;color:var(--text);font-size:13.5px;margin-bottom:6px;}
 
-  footer{margin-top:36px;text-align:center;font-size:11.5px;color:var(--text-dim);line-height:1.8;}
-  footer a{color:var(--text-muted);}
 </style>
 </head>
 <body>
@@ -226,11 +214,9 @@
   <header>
     <div class="brand">
       <div class="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 8L4 16" stroke="#04121f" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M9 5L9 19" stroke="#04121f" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M14 3L14 21" stroke="#04121f" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M19 7L19 17" stroke="#04121f" stroke-width="2.4" stroke-linecap="round"/>
+        <!-- 임의의 플레이 로고 SVG 삽입 -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
         </svg>
       </div>
       <div>
@@ -238,23 +224,29 @@
         <p>SOOP 다시보기 순수 조회수 · 영구보관 상태 필터</p>
       </div>
     </div>
-    <button class="theme-toggle" id="themeToggle" type="button">
-      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
-      <span id="themeLabel">다크 모드</span>
-    </button>
+    
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" type="button">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+        <span id="themeLabel">다크 모드</span>
+      </button>
+    </div>
   </header>
 
   <div class="panel">
-    <p class="panel-title">조회 대상 (여러 명 추가 가능)</p>
-    <div class="row" id="streamerRow">
-      <div class="field" id="streamerInputField">
-        <label for="streamerId">스트리머 아이디 추가</label>
-        <input type="text" id="streamerId" placeholder="예: bjid123">
+    <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap;">
+      <div style="display:flex; flex-direction:column; gap:14px; flex:1 1 auto; min-width:200px;">
+        <!-- 커스텀 스트리머 추가 영역 -->
+        <div style="display:flex; gap:6px; align-items:center;">
+          <input type="text" id="newStreamerId" placeholder="SOOP 아이디 입력 (예: choiagain)" style="width:240px; font-size:12.5px;">
+          <button class="btn-ghost" id="addStreamerBtn" style="padding: 8px 14px; margin:0;">아이디 등록</button>
+        </div>
+        <div class="streamer-list" id="streamerList" style="margin:0;"></div>
       </div>
-      <button class="btn-ghost" id="addStreamerBtn" style="margin-top:18px;">+ 추가</button>
-      <button class="btn-primary" id="fetchBtn">조회 시작 ▶</button>
+      <div style="display:flex; gap:8px; align-items:flex-start; margin-top:4px;">
+        <button class="btn-primary" id="fetchBtn" style="margin-left:0;flex-shrink:0;">목록 조회 시작 ▶</button>
+      </div>
     </div>
-    <div class="streamer-list" id="streamerList"></div>
   </div>
 
   <div class="panel">
@@ -269,17 +261,24 @@
         <label>최대</label>
         <input type="number" class="num-input" id="maxCount" value="999" min="0">
       </div>
-      <label class="checkline" style="margin-top:18px;">
-        <input type="checkbox" id="excludePerm" checked>
-        영구보관 달성 영상 제외
-      </label>
-      <label class="checkline" style="margin-top:18px;">
+      <label class="checkline" style="margin-top:18px; margin-right: 12px;">
         <input type="checkbox" id="deleteSoonOnly">
         30일 내 삭제예정만
       </label>
+      
+      <!-- 재생수 지정 및 재생 버튼 추가 (정렬 필터 포함) -->
       <div class="field" style="margin-top:0;">
-        <label>재생수 (오래된 순 자동)</label>
-        <input type="number" class="num-input" id="playCount" value="1" min="0" max="10">
+        <label>자동 채우기 기준 및 동시 재생</label>
+        <div style="display:flex; gap:6px;">
+          <select id="sortOrder" style="background:var(--surface-2);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:8px 10px;font-size:12.5px;outline:none;font-family:'Noto Sans KR',sans-serif;cursor:pointer;">
+            <option value="oldest">오래된순</option>
+            <option value="newest">최신순</option>
+            <option value="views_asc">조회수 낮은순</option>
+            <option value="views_desc">조회수 높은순</option>
+          </select>
+          <input type="number" class="num-input" id="playCount" value="1" min="1" max="10" style="width: 60px;">
+          <button class="btn-primary" id="startBatchPlayBtn" style="margin:0; padding: 0 12px; font-size: 12.5px;">▶ 재생</button>
+        </div>
       </div>
     </div>
   </div>
@@ -287,7 +286,7 @@
   <div class="panel">
     <div class="meter-row">
       <div class="meter" id="meter"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      <div class="status-text" id="statusText">대기 중 — 스트리머 아이디를 추가하고 조회를 시작하세요. (1페이지 · 2026-06-01 이후 등록분만)</div>
+      <div class="status-text" id="statusText">대기 중</div>
     </div>
   </div>
 
@@ -302,6 +301,12 @@
   <div class="results-head">
     <div class="results-head-left">
       <h2>리스트</h2>
+      <select id="listSortOrder" style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 8px;font-size:12px;outline:none;font-family:'Noto Sans KR',sans-serif;cursor:pointer;margin-left:8px;">
+        <option value="newest">최신순</option>
+        <option value="oldest">오래된순</option>
+        <option value="views_asc">조회수 낮은순</option>
+        <option value="views_desc">조회수 높은순</option>
+      </select>
       <span class="refresh-timer" id="refreshTimer"></span>
       <button class="refresh-btn" id="refreshBtn" type="button" title="조회수 새로고침" disabled>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -310,33 +315,19 @@
         </svg>
       </button>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <select id="streamerFilterSelect" class="swk-select" hidden>
-        <option value="all">전체</option>
-      </select>
-      <span class="results-count" id="resultsCount">0개</span>
-    </div>
+    <span class="results-count" id="resultsCount">0개</span>
   </div>
 
   <div id="results">
     <div class="empty">아직 조회된 데이터가 없습니다.</div>
   </div>
 
-
 </div>
 
 <script>
-(function(){
-  'use strict';
-
-  const THRESHOLD_DATE = new Date('2025-01-14T11:35:00+09:00');
-  const REG_DATE_CUTOFF = new Date('2026-06-01T00:00:00+09:00');
-  const CHAPI_BASE = 'https://chapi.sooplive.com/api';
-  const INFO_API   = 'https://api.m.sooplive.com/station/video/a/view';
-
   const $ = sel => document.querySelector(sel);
 
-  // ---- Theme (light/dark) ----
+  /* ---- 기존 테마 변경 로직 ---- */
   const THEME_KEY = 'vod-console-theme';
   const themeToggleBtn = $('#themeToggle');
   const themeIcon = $('#themeIcon');
@@ -347,40 +338,33 @@
   function applyTheme(theme){
     document.documentElement.setAttribute('data-theme', theme);
     if(theme === 'light'){
-      themeIcon.innerHTML = SUN_PATH;
-      themeIcon.style.color = 'var(--caution)';
-      themeLabel.textContent = '라이트 모드';
+      themeIcon.innerHTML = SUN_PATH; themeIcon.style.color = 'var(--caution)'; themeLabel.textContent = '라이트 모드';
     }else{
-      themeIcon.innerHTML = MOON_PATH;
-      themeIcon.style.color = 'var(--accent)';
-      themeLabel.textContent = '다크 모드';
+      themeIcon.innerHTML = MOON_PATH; themeIcon.style.color = 'var(--accent)'; themeLabel.textContent = '다크 모드';
     }
   }
 
   function initTheme(){
-    let saved = null;
-    try{ saved = localStorage.getItem(THEME_KEY); }catch{}
-    if(!saved){
-      saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    }
+    // 로컬 스토리지 제거
+    let saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     applyTheme(saved);
   }
 
   themeToggleBtn.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-    const next = current === 'light' ? 'dark' : 'light';
+    const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
     applyTheme(next);
-    try{ localStorage.setItem(THEME_KEY, next); }catch{}
   });
-
   initTheme();
 
-  const streamerInput = $('#streamerId');
-  const addStreamerBtn = $('#addStreamerBtn');
+  /* ---- 상위 설정 변수 ---- */
+  const THRESHOLD_DATE = new Date('2025-01-14T11:35:00+09:00');
+  const REG_DATE_CUTOFF = new Date('2026-06-01T00:00:00+09:00');
+  const CHAPI_BASE = 'https://chapi.sooplive.com/api';
+  const INFO_API   = 'https://api.m.sooplive.com/station/video/a/view';
+
   const streamerListEl = $('#streamerList');
   const minInput = $('#minCount');
   const maxInput = $('#maxCount');
-  const excludePerm = $('#excludePerm');
   const deleteSoonOnly = $('#deleteSoonOnly');
   const fetchBtn = $('#fetchBtn');
   const meter = $('#meter');
@@ -389,9 +373,158 @@
   const resultsCount = $('#resultsCount');
   const refreshTimerEl = $('#refreshTimer');
   const refreshBtnEl = $('#refreshBtn');
-  const streamerFilterSelect = $('#streamerFilterSelect');
-  let store = [];   // normalized vod list with info attached
+
+  let streamers = []; 
+  let store = [];
   let busy = false;
+  let selectedStreamerFilter = 'all';
+  let selectedManualVods = new Map(); 
+
+  // 스트리머 아이디로 고유한 HSL 색상을 생성하는 함수
+  function getStreamerColor(str) {
+    if(!str) return 'var(--accent)';
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return `hsl(${h}, 70%, 55%)`;
+  }
+
+  /* ---- 스트리머 리스트 관리 로직 ---- */
+  function loadSavedStreamers() {
+    // 로컬 스토리지 제거
+    renderStreamerList();
+  }
+
+  function saveStreamers() {
+    // 로컬 스토리지 제거됨
+  }
+
+  function addStreamer(id) {
+    if(!id) return;
+    id = id.toLowerCase().trim(); // 아이디는 소문자로 정규화
+    if(streamers.find(s => s.id === id)) {
+      alert('이미 등록된 아이디입니다.');
+      return;
+    }
+    streamers.push({ id, nickname: id, img: null, state: 'loading' });
+    saveStreamers();
+    renderStreamerList();
+    fetchStreamerProfile(id);
+    
+    // 추가 후 리스트를 갱신하도록 가이드
+    if (store.length > 0) {
+       setStatus(`새 아이디가 등록되었습니다. <b>[목록 조회 시작]</b> 버튼을 다시 눌러주세요.`);
+    }
+  }
+
+  $('#addStreamerBtn').addEventListener('click', () => {
+    const id = $('#newStreamerId').value;
+    addStreamer(id);
+    $('#newStreamerId').value = '';
+  });
+
+  $('#newStreamerId').addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') {
+      addStreamer(e.target.value);
+      e.target.value = '';
+    }
+  });
+
+  function renderStreamerList(){
+    if (streamers.length === 0) {
+      streamerListEl.innerHTML = '<span style="font-size:12px; color:var(--text-muted); margin-top:6px;">등록된 아이디가 없습니다. 위 입력창에서 추가해주세요.</span>';
+      return;
+    }
+
+    streamerListEl.innerHTML = streamers.map(s => {
+      const initial = (s.nickname || s.id).slice(0,1).toUpperCase();
+      const avatarInner = s.img ? `<img src="${s.img}" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${initial}'">` : initial;
+      const isActive = selectedStreamerFilter === s.id;
+      
+      const themeColor = getStreamerColor(s.id);
+      const bgMix = `color-mix(in srgb, ${themeColor} 16%, transparent)`;
+
+      return `
+        <div class="streamer-tag${isActive ? ' is-active' : ''}" data-id="${s.id}" title="클릭하면 이 스트리머만 필터링됩니다" 
+             style="${isActive ? `border-color:${themeColor}; background:${bgMix};` : ''}">
+          <div class="streamer-tag-avatar" style="color:${themeColor}; background:${bgMix};">${avatarInner}</div>
+          <div>
+            <div class="streamer-tag-nick" style="${isActive ? `color:${themeColor};` : ''}">${s.state === 'loading' ? '불러오는 중…' : (s.nickname || s.id)}</div>
+            <div class="streamer-tag-id">@${s.id}</div>
+          </div>
+          <button class="remove-streamer" data-id="${s.id}" title="삭제">×</button>
+        </div>`;
+    }).join('');
+  }
+
+  streamerListEl.addEventListener('click', e => {
+    // 삭제 버튼 클릭 시
+    const removeBtn = e.target.closest('.remove-streamer');
+    if(removeBtn) {
+      e.stopPropagation(); // 필터 토글 이벤트 방지
+      const id = removeBtn.dataset.id;
+      streamers = streamers.filter(s => s.id !== id);
+      if(selectedStreamerFilter === id) selectedStreamerFilter = 'all';
+      
+      // 스토어에서 해당 스트리머 영상 제거
+      store = store.filter(vod => vod.userId !== id);
+      
+      saveStreamers();
+      renderStreamerList();
+      render();
+      return;
+    }
+
+    // 태그 전체 클릭 시 필터
+    const tag = e.target.closest('.streamer-tag');
+    if(!tag) return;
+    const id = tag.dataset.id;
+    selectedStreamerFilter = (selectedStreamerFilter === id) ? 'all' : id;
+    renderStreamerList(); 
+    render();
+  });
+
+  async function fetchStreamerProfile(userId){
+    const entry = streamers.find(s => s.id === userId);
+    try{
+      const res = await fetch(`https://api-channel.sooplive.com/v1.1/channel/${encodeURIComponent(userId)}/station`, { headers: { 'Accept':'application/json' }});
+      if(!res.ok) throw new Error('profile error');
+      const json = await res.json();
+      const station = json?.station || json?.data?.station || json?.data || {};
+      if(entry){ 
+        entry.nickname = station.userNick ?? station.user_nick ?? station.nickname ?? userId; 
+        entry.img = station.profileImage ?? station.profile_image ?? station.stationImage ?? station.station_image ?? ''; 
+        entry.state = 'done'; 
+      }
+    }catch(e){
+      if(entry){ entry.nickname = userId; entry.state = 'done'; }
+    }
+    renderStreamerList(); 
+    render();
+  }
+
+  function nicknameFor(userId){ 
+    const s = streamers.find(s => s.id === userId); 
+    return s ? (s.nickname || s.id) : userId; 
+  }
+
+  /* ---- 데이터 수집 및 렌더링 로직 ---- */
+  resultsEl.addEventListener('change', (e) => {
+    if(e.target.classList.contains('manual-cb')){
+      const cb = e.target;
+      if(cb.checked){
+        selectedManualVods.set(cb.dataset.titleno, {
+          titleNo: cb.dataset.titleno,
+          title: cb.dataset.title,
+          userId: cb.dataset.userid
+        });
+      } else {
+        selectedManualVods.delete(cb.dataset.titleno);
+      }
+    }
+  });
 
   function parseDate(str){
     if(!str) return new Date();
@@ -414,13 +547,8 @@
     return {warn: daysLeft <= 30, daysLeft};
   }
 
-  function setMeter(active){
-    meter.classList.toggle('active', active);
-  }
-
-  function setStatus(html){
-    statusText.innerHTML = html;
-  }
+  function setMeter(active){ meter.classList.toggle('active', active); }
+  function setStatus(html){ statusText.innerHTML = html; }
 
   function normalizeVodItem(raw){
     const ucc = raw.ucc || {};
@@ -433,21 +561,12 @@
     if(vodRead === undefined || vodRead === null) return null;
     const basicRaw = count.read_cnt ?? count.readCnt ?? raw.read_cnt ?? raw.view_cnt ?? 0;
 
-    // --- 연령제한 / 구독플러스(전용) 필터 ---
-    // 실제 응답 확인 결과:
-    //   authNo: 101 = 전체 공개, 그 외(예: 107 = 구독자 전용)는 제한된 영상
-    //   ucc.grade: 0 = 전체 이용가, 그 외 값은 연령제한으로 간주
     const authNo = raw.authNo ?? raw.auth_no ?? 101;
     const isSubscriptionOnly = Number(authNo) !== 101;
-
     const grade = ucc.grade ?? ucc.gradeType ?? raw.grade ?? 0;
     const isAgeLimited = Number(grade) !== 0;
 
-    if(isAgeLimited || isSubscriptionOnly){
-      // 필터가 정확한지 확인하고 싶으면 콘솔에서 이 로그를 확인하세요.
-      console.debug('[VOD 필터] 제외됨:', { titleNo, authNo, grade, isAgeLimited, isSubscriptionOnly, raw });
-      return null;
-    }
+    if(isAgeLimited || isSubscriptionOnly) return null;
 
     return {
       titleNo,
@@ -465,10 +584,9 @@
   }
 
   async function fetchAllVods(userId){
-    // 1페이지만 가져온다 (최신 순 60개)
     const items = [];
     const url = `${CHAPI_BASE}/${encodeURIComponent(userId)}/vods/review?per_page=60&page=1`;
-    setStatus(`목록 수집 중… 1페이지`);
+    setStatus(`목록 수집 중… (${userId})`);
     const res = await fetch(url, { headers:{ 'Accept':'application/json' } });
     if(!res.ok) throw new Error(`목록 API 응답 오류 (HTTP ${res.status})`);
     const json = await res.json();
@@ -482,9 +600,7 @@
 
   async function fetchInfo(vod){
     const params = new URLSearchParams({
-      nTitleNo: vod.titleNo,
-      nStationNo: vod.stationNo || '',
-      nBbsNo: vod.bbsNo || ''
+      nTitleNo: vod.titleNo, nStationNo: vod.stationNo || '', nBbsNo: vod.bbsNo || ''
     });
     const res = await fetch(INFO_API, {
       method: 'POST',
@@ -507,10 +623,8 @@
     async function worker(){
       while(idx < vods.length){
         const vod = vods[idx++];
-        try{ await fetchInfo(vod); }
-        catch(e){ vod.infoState = 'error'; }
-        done++;
-        onProgress(done, vods.length);
+        try{ await fetchInfo(vod); } catch(e){ vod.infoState = 'error'; }
+        done++; onProgress(done, vods.length);
       }
     }
     await Promise.all(Array.from({length: Math.min(concurrency, vods.length)}, worker));
@@ -519,15 +633,27 @@
   function getFiltered(){
     const min = parseInt(minInput.value,10) || 0;
     const max = parseInt(maxInput.value,10) || 0;
-    const streamerSel = streamerFilterSelect.value;
-    return store.filter(vod => {
+    const streamerSel = selectedStreamerFilter;
+    let filtered = store.filter(vod => {
       if(streamerSel !== 'all' && vod.userId !== streamerSel) return false;
       const dc = calcDisplayCount(vod);
       if(dc < min || dc > max) return false;
-      if(excludePerm.checked && vod.isPerm) return false;
       if(deleteSoonOnly.checked && !computeDeletionWarning(vod).warn) return false;
       return true;
-    }).sort((a,b) => parseDate(b.regDate) - parseDate(a.regDate));
+    });
+
+    const listSortVal = $('#listSortOrder').value;
+    if (listSortVal === 'oldest') {
+      filtered.sort((a, b) => parseDate(a.regDate) - parseDate(b.regDate));
+    } else if (listSortVal === 'views_asc') {
+      filtered.sort((a, b) => calcDisplayCount(a) - calcDisplayCount(b));
+    } else if (listSortVal === 'views_desc') {
+      filtered.sort((a, b) => calcDisplayCount(b) - calcDisplayCount(a));
+    } else {
+      filtered.sort((a, b) => parseDate(b.regDate) - parseDate(a.regDate)); // newest
+    }
+
+    return filtered;
   }
 
   function fmtDate(str){
@@ -539,12 +665,9 @@
   function render(){
     const filtered = getFiltered();
     resultsCount.textContent = `${filtered.length}개`;
-
     if(filtered.length === 0){
-      resultsEl.innerHTML = `<div class="empty">조건에 맞는 영상이 없습니다.</div>`;
-      return;
+      resultsEl.innerHTML = `<div class="empty">조건에 맞는 영상이 없습니다.</div>`; return;
     }
-
     const rows = filtered.map((vod, i) => {
       const dc = calcDisplayCount(vod);
       const delWarn = computeDeletionWarning(vod);
@@ -554,20 +677,25 @@
       else if(delWarn.daysLeft !== null){
         badge = `<span class="badge ${delWarn.warn ? 'warn':'pending'}">🗑 ${delWarn.daysLeft > 0 ? delWarn.daysLeft + '일 후' : '기한초과'}</span>`;
       }
+      
       const safeTitle = (vod.title || '제목없음').replace(/</g,'&lt;');
-      const safeTitleAttr = safeTitle.replace(/"/g,'&quot;');
       const isPlaying = openPlayers.some(p => p.titleNo === vod.titleNo);
       const playingTag = isPlaying ? `<span class="badge good" style="margin-left:4px;">▶ 재생중</span>` : '';
+
+      const tColor = getStreamerColor(vod.userId);
       const streamerTag = streamers.length > 1 && vod.userId
-        ? `<span style="font-size:10.5px;color:var(--accent);background:var(--accent-dim);padding:1px 6px;border-radius:5px;margin-right:6px;white-space:nowrap;">${nicknameFor(vod.userId)}</span>`
+        ? `<span style="font-size:10.5px;color:${tColor};background:color-mix(in srgb, ${tColor} 16%, transparent);padding:1px 6px;border-radius:5px;margin-right:6px;white-space:nowrap;">${nicknameFor(vod.userId)}</span>`
         : '';
+        
+      const isChecked = selectedManualVods.has(vod.titleNo) ? 'checked' : '';
+
       return `
         <div class="list-row" style="${isPlaying ? 'border-left:2px solid var(--accent);background:var(--surface-2);' : ''}">
           <div class="list-main">
+            <input type="checkbox" class="manual-cb" data-titleno="${vod.titleNo}" data-title="${safeTitle}" data-userid="${vod.userId}" ${isChecked} style="width:16px; height:16px; margin-right:6px; cursor:pointer; accent-color:var(--accent);">
+            
             <div class="list-rank">${i+1}</div>
-            <div class="thumb" data-titleno="${vod.titleNo}">
-              ${vod.thumb ? `<img src="${vod.thumb}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='<span style=\\'display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--text-dim);font-size:16px;\\'>🎬</span>'">` : `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--text-dim);font-size:16px;">🎬</span>`}
-            </div>
+            <div class="thumb"><img src="${vod.thumb}" loading="lazy" alt="썸네일"></div>
             <div class="list-title">${streamerTag}<a href="${vod.vodUrl}" target="_blank" rel="noopener">${safeTitle}</a></div>
           </div>
           <div class="list-meta">
@@ -577,106 +705,36 @@
           </div>
         </div>`;
     }).join('');
-
     resultsEl.innerHTML = `<div class="list">${rows}</div>`;
-    syncAutoPlayers();
   }
 
-  // streamers: [{ id, nickname, img, state:'loading'|'done' }]
-  let streamers = [];
-
-  function renderStreamerList(){
-    streamerListEl.innerHTML = streamers.map(s => {
-      const initial = (s.nickname || s.id).slice(0,1).toUpperCase();
-      const avatarInner = s.img
-        ? `<img src="${s.img}" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${initial}'">`
-        : initial;
-      return `
-        <div class="streamer-tag" data-id="${s.id}">
-          <div class="streamer-tag-avatar">${avatarInner}</div>
-          <div>
-            <div class="streamer-tag-nick">${s.state === 'loading' ? '불러오는 중…' : (s.nickname || s.id)}</div>
-            <div class="streamer-tag-id">@${s.id}</div>
-          </div>
-          <button class="streamer-tag-x" data-id="${s.id}" title="제거">✕</button>
-        </div>`;
-    }).join('');
-    renderStreamerFilterOptions();
-  }
-
-  function renderStreamerFilterOptions(){
-    const prev = streamerFilterSelect.value || 'all';
-    streamerFilterSelect.hidden = streamers.length <= 1;
-    streamerFilterSelect.innerHTML = `<option value="all">전체</option>` +
-      streamers.map(s => `<option value="${s.id}">${s.state === 'loading' ? s.id : (s.nickname || s.id)}</option>`).join('');
-    const stillExists = prev === 'all' || streamers.some(s => s.id === prev);
-    streamerFilterSelect.value = stillExists ? prev : 'all';
-  }
-
-  streamerFilterSelect.addEventListener('change', render);
-
-  function addStreamer(){
-    const id = streamerInput.value.trim();
-    if(!id) { streamerInput.focus(); return; }
-    if(streamers.some(s => s.id === id)) { streamerInput.value = ''; return; }
-    streamers.push({ id, nickname: id, img: null, state: 'loading' });
-    streamerInput.value = '';
-    streamerInput.focus();
-    renderStreamerList();
-    fetchStreamerProfile(id);
-  }
-
-  function removeStreamer(id){
-    streamers = streamers.filter(s => s.id !== id);
-    renderStreamerList();
-  }
-
-  addStreamerBtn.addEventListener('click', addStreamer);
-  streamerListEl.addEventListener('click', e => {
-    const btn = e.target.closest('.streamer-tag-x');
-    if(btn) removeStreamer(btn.dataset.id);
-  });
-
-  async function fetchStreamerProfile(userId){
-    // 공식 문서가 없어 필드명은 추정치입니다. 실패해도 조회 자체는 계속 진행됩니다.
-    const entry = streamers.find(s => s.id === userId);
-    try{
-      const res = await fetch(`https://api-channel.sooplive.com/v1.1/channel/${encodeURIComponent(userId)}/station`, {
-        headers: { 'Accept':'application/json' }
-      });
-      if(!res.ok) throw new Error('profile http error');
-      const json = await res.json();
-      const station = json?.station || json?.data?.station || json?.data || {};
-      const nickname = station.userNick ?? station.user_nick ?? station.nickname ?? userId;
-      const img = station.profileImage ?? station.profile_image ?? station.stationImage ?? station.station_image ?? '';
-      if(entry){ entry.nickname = nickname; entry.img = img || null; entry.state = 'done'; }
-    }catch(e){
-      // 프로필 조회 실패(CORS 등) — 닉네임 없이 아이디만 표시
-      if(entry){ entry.nickname = userId; entry.state = 'done'; }
+  // 1분 자동 갱신 및 영상 교체 필터
+  function getSortedAvailableVods() {
+    const filtered = getFiltered();
+    const sortVal = $('#sortOrder').value;
+    
+    let sorted = [...filtered];
+    if (sortVal === 'oldest') {
+      sorted.sort((a, b) => parseDate(a.regDate) - parseDate(b.regDate));
+    } else if (sortVal === 'newest') {
+      sorted.sort((a, b) => parseDate(b.regDate) - parseDate(a.regDate));
+    } else if (sortVal === 'views_asc') {
+      sorted.sort((a, b) => calcDisplayCount(a) - calcDisplayCount(b));
+    } else if (sortVal === 'views_desc') {
+      sorted.sort((a, b) => calcDisplayCount(b) - calcDisplayCount(a));
     }
-    renderStreamerList();
-    render();   // 결과 목록의 스트리머 표시도 갱신
+    return sorted;
   }
 
-  function nicknameFor(userId){
-    const s = streamers.find(s => s.id === userId);
-    return s ? (s.nickname || s.id) : userId;
-  }
-
-  // ---- 조회수 5분 자동 갱신 ----
-  const VIEWCOUNT_REFRESH_MS = 5 * 60 * 1000;
-  let viewCountRefreshTimer = null;
-  let countdownDisplayTimer = null;
-  let nextRefreshAt = null;
+  const VIEWCOUNT_REFRESH_MS = 1 * 60 * 1000;
+  let viewCountRefreshTimer = null, countdownDisplayTimer = null, nextRefreshAt = null;
 
   function updateRefreshCountdown(){
     if(!nextRefreshAt){ refreshTimerEl.textContent = ''; return; }
     const msLeft = nextRefreshAt - Date.now();
     if(msLeft <= 0){ refreshTimerEl.textContent = '갱신 중…'; return; }
     const totalSec = Math.ceil(msLeft/1000);
-    const mm = String(Math.floor(totalSec/60)).padStart(2,'0');
-    const ss = String(totalSec%60).padStart(2,'0');
-    refreshTimerEl.textContent = `다음 갱신까지 ${mm}:${ss}`;
+    refreshTimerEl.textContent = `다음 갱신까지 ${String(Math.floor(totalSec/60)).padStart(2,'0')}:${String(totalSec%60).padStart(2,'0')}`;
   }
 
   function startViewCountRefreshTimer(){
@@ -685,135 +743,128 @@
     nextRefreshAt = Date.now() + VIEWCOUNT_REFRESH_MS;
     if(countdownDisplayTimer) clearInterval(countdownDisplayTimer);
     countdownDisplayTimer = setInterval(updateRefreshCountdown, 1000);
-    refreshBtnEl.disabled = false;
-    updateRefreshCountdown();
+    refreshBtnEl.disabled = false; updateRefreshCountdown();
   }
 
   function stopViewCountRefreshTimer(){
-    if(viewCountRefreshTimer){ clearInterval(viewCountRefreshTimer); viewCountRefreshTimer = null; }
-    if(countdownDisplayTimer){ clearInterval(countdownDisplayTimer); countdownDisplayTimer = null; }
-    nextRefreshAt = null;
-    refreshTimerEl.textContent = '';
-    refreshBtnEl.disabled = true;
+    if(viewCountRefreshTimer) clearInterval(viewCountRefreshTimer); viewCountRefreshTimer = null;
+    if(countdownDisplayTimer) clearInterval(countdownDisplayTimer); countdownDisplayTimer = null;
+    nextRefreshAt = null; refreshTimerEl.textContent = ''; refreshBtnEl.disabled = true;
   }
 
   async function refreshViewCounts(){
-    // 전체 재조회가 진행 중이거나 목록이 비어있으면 건너뜀
     if(busy || streamers.length === 0 || store.length === 0) return;
-    refreshBtnEl.disabled = true;
-    refreshBtnEl.classList.add('spinning');
+    refreshBtnEl.disabled = true; refreshBtnEl.classList.add('spinning');
     try{
       const results = await Promise.allSettled(streamers.map(s => fetchAllVods(s.id)));
       const freshByTitleNo = new Map();
-      results.forEach(r => {
-        if(r.status === 'fulfilled'){
-          r.value.forEach(item => freshByTitleNo.set(item.titleNo, item));
-        }
-      });
-      // 기존 목록의 조회수만 최신 값으로 갱신 (영구보관/삭제예정 정보는 유지)
+      results.forEach(r => { if(r.status === 'fulfilled') r.value.forEach(item => freshByTitleNo.set(item.titleNo, item)); });
       store.forEach(vod => {
         const fresh = freshByTitleNo.get(vod.titleNo);
-        if(fresh){
-          vod.count = fresh.count;
-          vod.basicCount = fresh.basicCount;
-        }
+        if(fresh){ vod.count = fresh.count; vod.basicCount = fresh.basicCount; }
       });
+      
       render();
+
+      if (openPlayers.length > 0) {
+        let needsUpdate = false;
+        const keepPlayers = [];
+        const currentFiltered = getFiltered(); 
+
+        openPlayers.forEach(p => {
+          const stillValid = currentFiltered.some(v => v.titleNo === p.titleNo);
+          if (stillValid) {
+            keepPlayers.push(p);
+          } else {
+            needsUpdate = true; 
+          }
+        });
+
+        openPlayers = keepPlayers;
+
+        const n = Math.max(0, Math.min(MAX_PLAYERS, parseInt(playCountInput.value, 10) || 0));
+        const needed = n - openPlayers.length;
+
+        if (needed > 0) {
+          const sortedAvailable = getSortedAvailableVods();
+          const available = sortedAvailable.filter(v => !openPlayers.some(p => p.titleNo === v.titleNo));
+          
+          const autoSelected = available.slice(0, needed).map(v => ({
+            titleNo: v.titleNo, 
+            title: v.title || '제목없음', 
+            userId: v.userId 
+          }));
+          
+          openPlayers = openPlayers.concat(autoSelected);
+          if (autoSelected.length > 0) needsUpdate = true;
+        }
+
+        if (needsUpdate) {
+          renderPlayers();
+          render(); 
+        }
+      }
+
       const now = new Date();
-      const hh = String(now.getHours()).padStart(2,'0');
-      const mm = String(now.getMinutes()).padStart(2,'0');
-      const ss = String(now.getSeconds()).padStart(2,'0');
-      setStatus(`완료 — 총 <b>${store.length}</b>건 수집 · 조회수 자동 갱신 ${hh}:${mm}:${ss}`);
+      setStatus(`완료 — 총 <b>${store.length}</b>건 수집 · 자동 갱신 및 영상교체 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`);
     }catch(e){
-      console.debug('[조회수 자동 갱신] 실패:', e);
+      console.debug('갱신 실패:', e);
     }finally{
-      refreshBtnEl.classList.remove('spinning');
-      refreshBtnEl.disabled = store.length === 0;
+      refreshBtnEl.classList.remove('spinning'); refreshBtnEl.disabled = store.length === 0;
     }
   }
 
   refreshBtnEl.addEventListener('click', async () => {
     if(refreshBtnEl.disabled || busy) return;
     await refreshViewCounts();
-    // 수동 새로고침 후에는 자동 갱신 주기를 지금 시점부터 다시 5분으로 리셋
     if(store.length > 0) startViewCountRefreshTimer();
   });
 
   async function runFetch(){
+    if(streamers.length === 0) {
+      alert("스트리머 아이디를 먼저 등록해주세요.");
+      return;
+    }
     if(busy) return;
-    if(streamers.length === 0){ streamerInput.focus(); return; }
-
-    busy = true;
-    fetchBtn.disabled = true;
-    setMeter(true);
-    stopViewCountRefreshTimer();
-    resultsEl.innerHTML = '';
-    store = [];
-    render();
+    busy = true; fetchBtn.disabled = true; setMeter(true); stopViewCountRefreshTimer();
+    resultsEl.innerHTML = ''; store = []; render();
 
     try{
       setStatus(`목록 수집 준비 중… (스트리머 <b>${streamers.length}</b>명)`);
       const results = await Promise.allSettled(streamers.map(s => fetchAllVods(s.id)));
-
-      const items = [];
-      const failed = [];
-      results.forEach((r, i) => {
-        if(r.status === 'fulfilled') items.push(...r.value);
-        else failed.push(streamers[i].id);
-      });
+      const items = [], failed = [];
+      results.forEach((r, i) => { if(r.status === 'fulfilled') items.push(...r.value); else failed.push(streamers[i].id); });
 
       store = items;
       setStatus(`목록 <b>${items.length}</b>건 수집 완료${failed.length ? ` (실패: ${failed.join(', ')})` : ''} — 영구보관 정보 조회 중…`);
       render();
 
-      await fetchInfoBatch(items, 5, (done, total) => {
-        setStatus(`영구보관 정보 조회 중… <b>${done}</b> / ${total}`);
-        render();
-      });
+      await fetchInfoBatch(items, 5, (done, total) => { setStatus(`영구보관 정보 조회 중… <b>${done}</b> / ${total}`); render(); });
 
       setStatus(`완료 — 총 <b>${items.length}</b>건 수집${failed.length ? ` (실패: ${failed.join(', ')})` : ''}`);
       startViewCountRefreshTimer();
     }catch(err){
-      const isCors = err instanceof TypeError;
-      resultsEl.innerHTML = `
-        <div class="error-box">
-          <b>${isCors ? '요청이 차단되었습니다 (CORS로 추정)' : '오류가 발생했습니다'}</b>
-          ${isCors
-            ? 'SOOP API 서버가 이 페이지의 출처(origin)에서 오는 요청을 허용하지 않는 것으로 보입니다. 브라우저 개발자 도구 콘솔(F12)에서 정확한 CORS 오류 메시지를 확인할 수 있습니다. 이 방식은 서버 측 프록시 없이는 우회할 수 없습니다.'
-            : (err.message || String(err))}
-        </div>`;
-      setStatus('오류로 중단됨');
+      resultsEl.innerHTML = `<div class="error-box"><b>오류가 발생했습니다</b>${err.message || String(err)}</div>`; setStatus('오류로 중단됨');
     }finally{
-      setMeter(false);
-      fetchBtn.disabled = false;
-      busy = false;
+      setMeter(false); fetchBtn.disabled = false; busy = false;
     }
   }
 
-  const playerBox = $('#playerBox');
-  const playerGrid = $('#playerGrid');
-  const playerCount = $('#playerCount');
-  const playerCloseAll = $('#playerCloseAll');
-  const MAX_PLAYERS = 10;
-  const REFRESH_MS = 60000;
-  let openPlayers = [];   // [{titleNo, title}]
-  let refreshTimer = null;
+  /* ---- 플레이어 제어 로직 ---- */
+  const playerBox = $('#playerBox'), playerGrid = $('#playerGrid'), playerCount = $('#playerCount'), playerCloseAll = $('#playerCloseAll');
+  const MAX_PLAYERS = 10, REFRESH_MS = 60000;
+  let openPlayers = [], refreshTimer = null;
 
-  function embedSrc(titleNo){
-    return `https://vod.sooplive.com/player/${titleNo}/embed?showChat=false&autoPlay=true&mutePlay=true&_r=${Date.now()}`;
+  function embedSrc(titleNo){ 
+    return `https://vod.sooplive.com/player/${titleNo}/embed?showChat=false&autoPlay=true&mutePlay=true&quality=540p&_r=${Date.now()}`; 
   }
-
-  function refreshAllPlayers(){
-    playerGrid.querySelectorAll('iframe[data-titleno]').forEach(f => {
-      f.src = embedSrc(f.dataset.titleno);
-    });
+  
+  function refreshAllPlayers(){ 
+    playerGrid.querySelectorAll('iframe[data-titleno]').forEach(f => { f.src = embedSrc(f.dataset.titleno); }); 
   }
-
+  
   function ensureRefreshTimer(){
-    if(openPlayers.length === 0){
-      if(refreshTimer){ clearInterval(refreshTimer); refreshTimer = null; }
-      return;
-    }
+    if(openPlayers.length === 0){ if(refreshTimer){ clearInterval(refreshTimer); refreshTimer = null; } return; }
     if(!refreshTimer) refreshTimer = setInterval(refreshAllPlayers, REFRESH_MS);
   }
 
@@ -826,56 +877,70 @@
           style="position:absolute;top:6px;right:6px;z-index:2;width:24px;height:24px;border-radius:50%;
           background:rgba(0,0,0,.6);color:#fff;border:none;cursor:pointer;font-size:13px;line-height:1;">✕</button>
         <div style="position:relative;width:100%;padding-top:56.25%;">
-          <iframe data-titleno="${p.titleNo}" src="${embedSrc(p.titleNo)}"
-            frameborder="0" allowfullscreen="true" allow="clipboard-write; web-share;"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+          <iframe data-titleno="${p.titleNo}" src="${embedSrc(p.titleNo)}" frameborder="0" allowfullscreen="true" allow="clipboard-write; web-share;" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
         </div>
         <div style="padding:6px 9px;font-size:11.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.title}</div>
-      </div>
-    `).join('');
+      </div>`).join('');
     ensureRefreshTimer();
+  }
+  
+  function closeEmbed(titleNo){ 
+    openPlayers = openPlayers.filter(p => p.titleNo !== titleNo); 
+    renderPlayers(); 
+    render(); 
   }
 
   const playCountInput = $('#playCount');
+  const startBatchPlayBtn = $('#startBatchPlayBtn');
 
-  function closeEmbed(titleNo){
-    openPlayers = openPlayers.filter(p => p.titleNo !== titleNo);
-    // 수동으로 하나를 닫으면, 다음 렌더 때 재생수만큼 다시 자동으로 채워집니다.
-    renderPlayers();
-  }
+  startBatchPlayBtn.addEventListener('click', () => {
+    if(store.length === 0) {
+      alert("먼저 [목록 조회 시작] 버튼을 눌러 영상 목록을 불러와주세요.");
+      return;
+    }
 
-  function syncAutoPlayers(){
     const n = Math.max(0, Math.min(MAX_PLAYERS, parseInt(playCountInput.value, 10) || 0));
-    const oldestFirst = getFiltered().slice().reverse();   // getFiltered()는 최신순 → 뒤집으면 오래된 순
-    const desired = oldestFirst.slice(0, n).map(v => ({ titleNo: v.titleNo, title: v.title || '제목없음' }));
+    if(n === 0) return;
+    
+    let desired = Array.from(selectedManualVods.values()).slice(0, n);
+    const needed = n - desired.length;
+    
+    if (needed > 0) {
+      const sortedAvailable = getSortedAvailableVods();
+      const available = sortedAvailable.filter(v => !selectedManualVods.has(v.titleNo));
+      
+      const autoSelected = available.slice(0, needed).map(v => ({
+        titleNo: v.titleNo, 
+        title: v.title || '제목없음', 
+        userId: v.userId 
+      }));
+      
+      desired = desired.concat(autoSelected);
+    }
 
-    const sameSet = desired.length === openPlayers.length &&
-      desired.every((p, i) => p.titleNo === openPlayers[i].titleNo);
-    if(sameSet) return;   // 변경 없으면 iframe 재로딩 방지
+    if(desired.length === 0){
+        alert("재생할 조건에 맞는 영상이 없습니다.");
+        return;
+    }
 
-    openPlayers = desired;
+    openPlayers = desired; 
     renderPlayers();
-  }
-
-  playerCloseAll.addEventListener('click', () => {
-    playCountInput.value = 0;
-    openPlayers = [];
-    renderPlayers();
+    
+    selectedManualVods.clear();
+    render(); 
   });
 
-  playerGrid.addEventListener('click', e => {
-    const btn = e.target.closest('.player-x');
-    if(btn) closeEmbed(btn.dataset.titleno);
-  });
-
-  playCountInput.addEventListener('input', () => { syncAutoPlayers(); render(); });
-
+  playerCloseAll.addEventListener('click', () => { openPlayers = []; renderPlayers(); render(); });
+  playerGrid.addEventListener('click', e => { const btn = e.target.closest('.player-x'); if(btn) closeEmbed(btn.dataset.titleno); });
+  
   fetchBtn.addEventListener('click', runFetch);
-  streamerInput.addEventListener('keydown', e => { if(e.key === 'Enter') addStreamer(); });
-  [minInput, maxInput, excludePerm, deleteSoonOnly].forEach(el => el.addEventListener('input', render));
-  [excludePerm, deleteSoonOnly].forEach(el => el.addEventListener('change', render));
+  [minInput, maxInput, deleteSoonOnly].forEach(el => el.addEventListener('input', render));
+  deleteSoonOnly.addEventListener('change', render);
+  $('#listSortOrder').addEventListener('change', render);
 
-})();
+  // 초기 시작 시 저장된 아이디 불러오기
+  loadSavedStreamers();
+
 </script>
 </body>
 </html>
